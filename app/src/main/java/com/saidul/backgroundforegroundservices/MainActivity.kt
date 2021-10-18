@@ -32,15 +32,15 @@ class MainActivity : AppCompatActivity() {
 
         val btnForgroudLocationService = findViewById<Button>(R.id.btn_forgroud_location_service)
 
-        if (foregroundServiceRunning()){
-            btnForgroudLocationService.setText("Stop service")
-        }else{
-            btnForgroudLocationService.setText(getString(R.string.start_foreground_location_service))
+        if (foregroundServiceRunning()) {
+            btnForgroudLocationService.text = getString(R.string.stop_service)
+        } else {
+            btnForgroudLocationService.text = getString(R.string.start_foreground_location_service)
         }
 
         btnForgroudLocationService.setOnClickListener {
             if (!foregroundServiceRunning()) {
-                val serviceIntent = Intent(this, MyForegroundService::class.java)
+                val serviceIntent = Intent(this, BackgroundLocationUpdateService::class.java)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     startForegroundService(serviceIntent)
                     btnForgroudLocationService.setText("Stop service")
@@ -48,10 +48,10 @@ class MainActivity : AppCompatActivity() {
                     startService(serviceIntent)
                     btnForgroudLocationService.setText("Stop service")
                 }
-            }else{
-                val serviceIntent = Intent(this, MyForegroundService::class.java)
+            } else {
+                val serviceIntent = Intent(this, BackgroundLocationUpdateService::class.java)
                 val stopService = stopService(serviceIntent)
-                if (stopService){
+                if (stopService) {
                     btnForgroudLocationService.setText(getString(R.string.start_foreground_location_service))
                 }
 
