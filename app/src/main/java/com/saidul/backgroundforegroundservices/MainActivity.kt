@@ -1,15 +1,15 @@
 package com.saidul.backgroundforegroundservices
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.saidul.backgroundforegroundservices.databinding.ActivityMainBinding
+import android.app.ActivityManager
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,35 +24,52 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        onUserInputControl(binding)
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+    }
+
+    private fun onUserInputControl(binding: ActivityMainBinding) {
+
+        val btnForgroudLocationService = findViewById<Button>(R.id.btn_forgroud_location_service)
+
+        if (foregroundServiceRunning()){
+            btnForgroudLocationService.setText("Stop service")
+        }else{
+            btnForgroudLocationService.setText(getString(R.string.start_foreground_location_service))
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
+        btnForgroudLocationService.setOnClickListener {
+            if (!foregroundServiceRunning()) {
+                val serviceIntent = Intent(this, MyForegroundService::class.java)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(serviceIntent)
+                    btnForgroudLocationService.setText("Stop service")
+                } else {
+                    startService(serviceIntent)
+                    btnForgroudLocationService.setText("Stop service")
+                }
+            }else{
+                val serviceIntent = Intent(this, MyForegroundService::class.java)
+                val stopService = stopService(serviceIntent)
+                if (stopService){
+                    btnForgroudLocationService.setText(getString(R.string.start_foreground_location_service))
+                }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+            }
         }
+
+
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+    fun foregroundServiceRunning(): Boolean {
+        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
+            if (MyForegroundService::class.java.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
+
+
 }
