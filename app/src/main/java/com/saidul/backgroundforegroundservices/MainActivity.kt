@@ -8,7 +8,10 @@ import com.saidul.backgroundforegroundservices.databinding.ActivityMainBinding
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.location.Location
 import android.os.Build
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DatabaseReference
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +28,13 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
 
         onUserInputControl(binding)
+
+
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("message")
+        myRef.setValue("Hello, World!").addOnFailureListener {
+
+        }
 
     }
 

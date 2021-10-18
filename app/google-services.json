@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "468057774224",
+    "project_id": "androidbackgroundservicetest",
+    "storage_bucket": "androidbackgroundservicetest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468057774224:android:2c0d4aad056d528dee2015",
+        "android_client_info": {
+          "package_name": "com.saidul.backgroundforegroundservices"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468057774224-c6m27n9pcsqdo69sj71pr63ibj8ugs7d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCbs_1ugN3MyB6-OxrCzyqMV1fIyKsZjzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468057774224-c6m27n9pcsqdo69sj71pr63ibj8ugs7d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

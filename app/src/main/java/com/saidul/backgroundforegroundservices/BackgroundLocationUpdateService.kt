@@ -22,6 +22,10 @@ import android.media.RingtoneManager
 import android.os.Handler
 import com.google.android.gms.location.*
 import java.util.concurrent.TimeUnit
+import com.google.firebase.database.DatabaseReference
+
+import com.google.firebase.database.FirebaseDatabase
+
 
 class BackgroundLocationUpdateService : Service() {
     private var context: Context? = null
@@ -109,6 +113,8 @@ class BackgroundLocationUpdateService : Service() {
                     Log.d(TAG, "onLocationResult ")
                     location[0] = locationResult.lastLocation
                     if (location[0] != null) {
+                        setLocationToFCM(location[0])
+
                         Log.d(TAG, "location update " + location[0])
                         Log.d(
                             TAG, "location Latitude " + location[0]!!
@@ -134,6 +140,17 @@ class BackgroundLocationUpdateService : Service() {
             }
             client?.requestLocationUpdates(request, locationCallback, null)
         }
+    }
+
+    private fun setLocationToFCM(location: Location?) {
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("androidbackgroundservicetest-default-rtdb")
+        myRef.setValue(location).addOnFailureListener({
+            print("")
+        }).addOnSuccessListener {
+            print("")
+        }
+        myRef.push()
     }
 
     /*-------- For notification ----------*/
