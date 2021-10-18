@@ -27,7 +27,7 @@ class BackgroundLocationUpdateService : Service() {
     private var context: Context? = null
     private var client: FusedLocationProviderClient? = null
     private var locationCallback: LocationCallback? = null
-    private val stopService = false
+    private var stopService = false
     private var handler: Handler? = null
     private var runnable: Runnable? = null
     private var builder: NotificationCompat.Builder? = null
@@ -70,34 +70,27 @@ class BackgroundLocationUpdateService : Service() {
             Log.e(TAG, "Location Update Callback Removed")
         }
 
-        Thread {
-            while (true) {
-                Log.e("Service", "Service is running...")
-                try {
-                    Thread.sleep(2000)
-                } catch (e: InterruptedException) {
-                    e.printStackTrace()
-                }
-            }
-        }.start()
 
-
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
-    //    @Override
-    //    public void onDestroy() {
-    //        super.onDestroy();
-    //        Log.e(TAG, "BackgroundService onDestroy :: ");
-    //        stopService = true;
-    ////        if (handler != null) {
-    ////            handler.removeCallbacks(runnable);
-    ////        }
-    ////        if (client != null) {
-    ////            client.removeLocationUpdates(locationCallback);
-    ////            Log.e(TAG, "Location Update Callback Removed");
-    ////        }
-    //    }
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Log.e(TAG, "BackgroundService onDestroy :: ");
+        stopService = true;
+        if (handler != null) {
+            handler!!.removeCallbacks(runnable!!);
+        }
+        if (client != null) {
+            client!!.removeLocationUpdates(locationCallback);
+            Log.e(TAG, "Location Update Callback Removed");
+        }
+    }
+
+
+
+
     private fun requestLocationUpdates() {
         val request = LocationRequest()
         request.setFastestInterval(100)

@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
     fun foregroundServiceRunning(): Boolean {
         val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in activityManager.getRunningServices(Int.MAX_VALUE)) {
-            if (MyForegroundService::class.java.name == service.service.className) {
+            if (BackgroundLocationUpdateService::class.java.name == service.service.className) {
                 return true
             }
         }
